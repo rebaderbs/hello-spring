@@ -4,60 +4,60 @@ import org.apache.coyote.Request;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller 
-@RequestMapping("hello")
-@ResponseBody
+@Controller
 public class HelloController {
 
-    //lives at /hello/goodbye
-    @GetMapping("goodbye")
-    public String goodbye() {
-        return "Goodbye, Spring!";
-    }
-
-    //lives at /hello
-//    @GetMapping("")
-//    public String hello()   {
-//        return "Hello, Spring!";
-//    }
-//
-//    @PostMapping("goodbye")
-//    public String goodbye() {
-//        return "Goodbye, Spring!";
-//    }
-
-//    @RequestMapping(value="hellogoodbye", method = {RequestMethod.GET, Request.POST})
-//    public String hellogoodbye()    {
-//        return "Hello. Goodbye!";
-//    }
-
-//    @GetMapping("")
-//    public String hello()   {
-//        return "Hello, Spring!";
-//    }
-
-    //handles requests of the form /hello?name=LaunchCode
-    @RequestMapping(method= {RequestMethod.GET, RequestMethod.POST})
-    public String helloWithQueryParam(@RequestParam String name) {
-        return "Hello, " + name + "!";
-    }
-
-    //handles requests of the form /hello/LaunchCode
-    //variable is part of the PATH, not the query string like above
-    @GetMapping("{name}")
-    public String helloWithPathParam(@PathVariable String name) {
-        return "Hello, " + name + "!";
-    }
-
+    //Modify your HelloController class to display a form on a GET request that asks the user for both their name and the language they would like to be greeted in
     @GetMapping("form")
-    public String helloForm()   {
+    @ResponseBody
+    public String helloLanguageForm()   {
         return "<html>" +
                 "<body>" +
                 "<form action='/hello' method = 'post'>" +
                 "<input type = 'text' name='name'/>" +
+                "<select name='language' id='language-select'>" +
+                "<option value=''>--Please choose a language--</option>" +
+                "<option value='english'>English</option>" +
+                "<option value='french'>French</option>" +
+                "<option value='italian'>Italian</option>" +
+                "<option value='swedish'>Swedish</option>" +
+                "<option value='spanish'>Spanish</option>" +
+                "</select>" +
                 "<input type = 'submit' value='Greet me!'/>" +
                 "</form>" +
                 "</body>" +
                 "</html>";
     }
+
+    @RequestMapping(value = "hello", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    //takes two arguments: name and language
+    public String helloPost(@RequestParam String name, @RequestParam String language) {
+
+        return createMessage(name, language);
+
+    }
+
+    public static String createMessage(String name, String language)    {
+        String greeting = "";
+
+        if (language.equals("english")) {
+            greeting = "Hello";
+        }
+        else if (language.equals("french")) {
+            greeting = "Bonjour";
+        }
+        else if (language.equals("italian"))    {
+            greeting = "Bonjourno";
+        }
+        else if (language.equals("swedish"))    {
+            greeting = "Hallå";
+        }
+        else if (language.equals("spanish"))    {
+            greeting = "Hola";
+        }
+
+        return greeting + " " + name;
+    }
+
 }
